@@ -1,0 +1,19 @@
+{
+  "name": "TrackWise - Daily Expenses & Work",
+  "short_name": "TrackWise",
+  "description": "Smart daily expense tracker with payment labels (Cash, UPI, Cards) and daily work to-do list.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c0f17",
+  "theme_color": "#0c0f17",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "productivity", "utilities"]
+}

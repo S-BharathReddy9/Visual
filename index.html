@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#0c0f17" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="TrackWise" />
+    <title>TrackWise - Daily Expenses & Work Tracker</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
+    
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app" class="app-container">
+      <!-- Top App Bar -->
+      <header class="app-header">
+        <div class="header-left">
+          <div class="app-brand">
+            <div class="brand-icon-wrapper">
+              <img src="/icon.svg" alt="TrackWise" class="brand-logo" />
+            </div>
+            <div>
+              <h1 class="brand-title">TrackWise</h1>
+              <p class="brand-subtitle" id="header-greeting">Today's Overview</p>
+            </div>
+          </div>
+        </div>
+        <div class="header-right">
+          <button id="btn-quick-apk-info" class="icon-btn-pill" title="Android App & APK Info">
+            <span class="android-dot"></span>
+            <span class="btn-text">Android</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Scrollable Content Views -->
+      <main class="app-main" id="main-content">
+        <!-- TAB 1: TODAY -->
+        <section id="view-today" class="view-section active">
+          <!-- Today's Budget Status Card -->
+          <div class="budget-hero-card" id="today-budget-card">
+            <!-- Dynamic Content populated by JS -->
+          </div>
+
+          <!-- Quick Stats Highlights -->
+          <div class="quick-stats-row">
+            <div class="stat-pill-card stat-expense">
+              <span class="stat-pill-icon">💸</span>
+              <div class="stat-pill-info">
+                <span class="stat-pill-label">Today's Spent</span>
+                <span class="stat-pill-val" id="today-total-spent">₹0</span>
+              </div>
+            </div>
+            <div class="stat-pill-card stat-tasks">
+              <span class="stat-pill-icon">✅</span>
+              <div class="stat-pill-info">
+                <span class="stat-pill-label">Tasks Pending</span>
+                <span class="stat-pill-val" id="today-pending-tasks">0</span>
+              </div>
+            </div>
+            <div class="stat-pill-card stat-streak">
+              <span class="stat-pill-icon">🔥</span>
+              <div class="stat-pill-info">
+                <span class="stat-pill-label">Habit Streak</span>
+                <span class="stat-pill-val" id="today-streak-count">0 Days</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Add Floating Bar / Action Chips -->
+          <div class="quick-actions-bar">
+            <button class="action-btn action-expense" id="btn-open-add-expense">
+              <span class="btn-symbol">+</span> Add Expense
+            </button>
+            <button class="action-btn action-task" id="btn-open-add-task">
+              <span class="btn-symbol">+</span> Add Task / Work
+            </button>
+          </div>
+
+          <!-- Today's Recurring Daily Habits -->
+          <div class="section-block">
+            <div class="section-header">
+              <div class="section-title-wrap">
+                <span class="section-icon">⚡</span>
+                <h2 class="section-title">Daily Habits & Work</h2>
+              </div>
+              <span class="section-badge" id="habits-progress-badge">0/0 Done</span>
+            </div>
+            <div id="today-habits-list" class="items-list">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Today's Expenses Breakdown Preview -->
+          <div class="section-block">
+            <div class="section-header">
+              <div class="section-title-wrap">
+                <span class="section-icon">💳</span>
+                <h2 class="section-title">Today's Expenses</h2>
+              </div>
+              <button class="text-link-btn" id="link-view-all-expenses">View All &rarr;</button>
+            </div>
+            <div id="today-expenses-list" class="items-list">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: EXPENSES -->
+        <section id="view-expenses" class="view-section">
+          <!-- Expenses Header & Filter Bar -->
+          <div class="expenses-control-panel">
+            <div class="spend-summary-banner">
+              <div class="spend-summary-left">
+                <span class="spend-summary-sub">Total Filtered Spend</span>
+                <span class="spend-summary-amount" id="expenses-filter-total">₹0</span>
+              </div>
+              <button class="btn-primary-compact" id="btn-add-expense-alt">+ New Expense</button>
+            </div>
+
+            <!-- Payment Method Filter Chips -->
+            <div class="filter-group">
+              <span class="filter-group-label">Filter by Payment Mode:</span>
+              <div class="filter-chips-scroller" id="payment-filter-chips">
+                <button class="filter-chip active" data-method="all">All Methods</button>
+                <button class="filter-chip chip-upi" data-method="UPI">⚡ UPI</button>
+                <button class="filter-chip chip-cash" data-method="Cash">💵 Cash</button>
+                <button class="filter-chip chip-debit" data-method="Debit Card">💳 Debit Card</button>
+                <button class="filter-chip chip-credit" data-method="Credit Card">💳 Credit Card</button>
+                <button class="filter-chip chip-netbanking" data-method="Net Banking">🏦 Net Banking</button>
+                <button class="filter-chip chip-other" data-method="Other">🔄 Other</button>
+              </div>
+            </div>
+
+            <!-- Category / Date Filter -->
+            <div class="sub-filter-row">
+              <select id="select-category-filter" class="form-select-sm">
+                <option value="all">All Categories</option>
+                <option value="Food & Dining">🍔 Food & Dining</option>
+                <option value="Commute & Travel">🚕 Commute & Travel</option>
+                <option value="Groceries">🛒 Groceries</option>
+                <option value="Shopping">🛍️ Shopping</option>
+                <option value="Bills & Utilities">💡 Bills & Utilities</option>
+                <option value="Entertainment">🍿 Entertainment</option>
+                <option value="Healthcare">💊 Healthcare</option>
+                <option value="Education">📚 Education</option>
+                <option value="Other">📦 Other</option>
+              </select>
+
+              <select id="select-date-filter" class="form-select-sm">
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- All Expenses List -->
+          <div id="all-expenses-container" class="expenses-feed">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <!-- TAB 3: TASKS / TO-DO & WORK -->
+        <section id="view-tasks" class="view-section">
+          <div class="tasks-control-panel">
+            <div class="tasks-summary-banner">
+              <div>
+                <span class="spend-summary-sub">Daily Work Progress</span>
+                <div class="progress-bar-container">
+                  <div class="progress-bar-fill" id="tasks-progress-fill" style="width: 0%"></div>
+                </div>
+              </div>
+              <button class="btn-primary-compact btn-purple" id="btn-add-task-alt">+ New Task</button>
+            </div>
+
+            <!-- Task Filter Tabs -->
+            <div class="filter-segmented-control">
+              <button class="segment-btn active" data-task-filter="all">All Work</button>
+              <button class="segment-btn" data-task-filter="pending">Pending</button>
+              <button class="segment-btn" data-task-filter="completed">Completed</button>
+              <button class="segment-btn" data-task-filter="recurring">Daily Habits 🔥</button>
+            </div>
+          </div>
+
+          <!-- Tasks List -->
+          <div id="all-tasks-container" class="tasks-feed">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <!-- TAB 4: ANALYTICS -->
+        <section id="view-analytics" class="view-section">
+          <div class="analytics-header">
+            <h2 class="view-title">Insights & Analytics</h2>
+            <p class="view-subtitle">Visual breakdown of where your money goes</p>
+          </div>
+
+          <!-- Monthly Budget Meter Card -->
+          <div class="analytics-card" id="analytics-monthly-meter">
+            <!-- Rendered via JS -->
+          </div>
+
+          <!-- Payment Method Breakdown (Donut Chart) -->
+          <div class="analytics-card">
+            <div class="card-heading-row">
+              <h3 class="card-title">Expenses by Payment Mode</h3>
+              <span class="card-tag">UPI vs Cash vs Cards</span>
+            </div>
+            <div id="chart-payment-methods" class="chart-wrapper">
+              <!-- Rendered via SVG in JS -->
+            </div>
+          </div>
+
+          <!-- Category Breakdown (Donut Chart) -->
+          <div class="analytics-card">
+            <div class="card-heading-row">
+              <h3 class="card-title">Expenses by Category</h3>
+              <span class="card-tag">Distribution</span>
+            </div>
+            <div id="chart-categories" class="chart-wrapper">
+              <!-- Rendered via SVG in JS -->
+            </div>
+          </div>
+
+          <!-- Last 7 Days Spending Trend -->
+          <div class="analytics-card">
+            <div class="card-heading-row">
+              <h3 class="card-title">Daily Spending Trend</h3>
+              <span class="card-tag">Past 7 Days</span>
+            </div>
+            <div id="chart-daily-trend" class="chart-wrapper">
+              <!-- Rendered via SVG in JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 5: SETTINGS & ANDROID GUIDE -->
+        <section id="view-settings" class="view-section">
+          <div class="settings-content">
+            <h2 class="view-title">Settings & Android Setup</h2>
+
+            <!-- Budget Configuration Card -->
+            <div class="settings-card">
+              <h3 class="settings-card-title">💰 Budget & Currency</h3>
+              <div class="setting-form-group">
+                <label for="input-daily-budget">Daily Budget Limit</label>
+                <div class="input-with-prefix">
+                  <span class="input-prefix" id="settings-curr-prefix">₹</span>
+                  <input type="number" id="input-daily-budget" min="0" step="50" placeholder="1000" />
+                </div>
+              </div>
+              <div class="setting-form-group">
+                <label for="input-monthly-budget">Monthly Budget Limit</label>
+                <div class="input-with-prefix">
+                  <span class="input-prefix" id="settings-curr-prefix-2">₹</span>
+                  <input type="number" id="input-monthly-budget" min="0" step="500" placeholder="25000" />
+                </div>
+              </div>
+              <div class="setting-form-group">
+                <label for="select-currency">Currency Symbol</label>
+                <select id="select-currency" class="form-select">
+                  <option value="₹">₹ Indian Rupee (INR)</option>
+                  <option value="$">$ US Dollar (USD)</option>
+                  <option value="€">€ Euro (EUR)</option>
+                  <option value="£">£ British Pound (GBP)</option>
+                  <option value="¥">¥ Japanese Yen (JPY)</option>
+                  <option value="AED">AED UAE Dirham</option>
+                </select>
+              </div>
+              <button class="btn-primary" id="btn-save-budget-settings">Save Budget Limits</button>
+            </div>
+
+            <!-- Android App & APK Build Instructions -->
+            <div class="settings-card android-guide-card">
+              <div class="guide-badge-row">
+                <span class="android-icon-badge">🤖 Android</span>
+                <span class="ready-badge">Capacitor Project Ready</span>
+              </div>
+              <h3 class="settings-card-title">How to Install & Build APK</h3>
+              <p class="guide-desc">You have 2 convenient ways to run this on your Android device:</p>
+              
+              <div class="guide-method-box">
+                <h4>Method 1: Instant Install on Android (PWA)</h4>
+                <ol class="guide-steps">
+                  <li>Run the dev or preview server (`npm run dev -- --host`).</li>
+                  <li>Open the URL on your Android phone's Google Chrome.</li>
+                  <li>Tap the <strong>"Install TrackWise"</strong> or <strong>"Add to Home screen"</strong> prompt.</li>
+                  <li>It runs full-screen, offline, with its own app icon just like a native app!</li>
+                </ol>
+              </div>
+
+              <div class="guide-method-box">
+                <h4>Method 2: Standalone .APK Build (Capacitor)</h4>
+                <p class="guide-subtext">The native Android platform has already been integrated in the <code>android/</code> directory.</p>
+                <div class="code-snippet-box">
+                  <code># 1. Sync latest changes<br/>npm run cap:sync<br/><br/># 2. Open Android Studio<br/>npm run cap:open<br/><br/># 3. Or build APK directly via Gradle:<br/>cd android &amp;&amp; gradlew.bat assembleDebug</code>
+                </div>
+                <p class="guide-subtext">The generated APK will be at: <code>android/app/build/outputs/apk/debug/app-debug.apk</code></p>
+              </div>
+            </div>
+
+            <!-- Data Backup & Reset -->
+            <div class="settings-card">
+              <h3 class="settings-card-title">📦 Data Management</h3>
+              <div class="settings-actions-grid">
+                <button class="btn-outline" id="btn-export-data">⬇️ Export Data (JSON)</button>
+                <label class="btn-outline file-btn-label">
+                  ⬆️ Import Data (JSON)
+                  <input type="file" id="input-import-data" accept=".json" style="display: none;" />
+                </label>
+                <button class="btn-outline btn-warning" id="btn-reset-demo">🔄 Reset Sample Data</button>
+                <button class="btn-outline btn-danger" id="btn-clear-all">🗑️ Clear All Data</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Bottom Navigation Bar -->
+      <nav class="bottom-nav" id="bottom-navigation">
+        <button class="nav-item active" id="nav-btn-today" data-target="view-today">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Today</span>
+        </button>
+        <button class="nav-item" id="nav-btn-expenses" data-target="view-expenses">
+          <span class="nav-icon">💰</span>
+          <span class="nav-label">Expenses</span>
+        </button>
+        <button class="nav-item" id="nav-btn-tasks" data-target="view-tasks">
+          <span class="nav-icon">📝</span>
+          <span class="nav-label">To-Do</span>
+        </button>
+        <button class="nav-item" id="nav-btn-analytics" data-target="view-analytics">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Analytics</span>
+        </button>
+        <button class="nav-item" id="nav-btn-settings" data-target="view-settings">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">Settings</span>
+        </button>
+      </nav>
+
+      <!-- MODAL: ADD / EDIT EXPENSE -->
+      <div id="modal-expense" class="bottom-sheet-modal">
+        <div class="modal-backdrop" id="backdrop-expense"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="modal-expense-title">Add Expense</h3>
+            <button class="btn-close-modal" id="btn-close-modal-expense">&times;</button>
+          </div>
+          <form id="form-expense" class="modal-body">
+            <input type="hidden" id="expense-id" />
+
+            <!-- Amount Input & Quick Chips -->
+            <div class="form-group">
+              <label class="form-label" for="expense-amount">Amount (<span class="curr-symbol">₹</span>)</label>
+              <div class="amount-input-wrap">
+                <span class="amount-symbol curr-symbol">₹</span>
+                <input type="number" id="expense-amount" step="any" min="0.01" placeholder="0.00" required autofocus />
+              </div>
+              <div class="quick-amount-chips">
+                <button type="button" class="amt-chip" data-amt="50">+50</button>
+                <button type="button" class="amt-chip" data-amt="100">+100</button>
+                <button type="button" class="amt-chip" data-amt="200">+200</button>
+                <button type="button" class="amt-chip" data-amt="500">+500</button>
+                <button type="button" class="amt-chip" data-amt="1000">+1000</button>
+              </div>
+            </div>
+
+            <!-- Expense Title / Description -->
+            <div class="form-group">
+              <label class="form-label" for="expense-title">What did you spend on?</label>
+              <input type="text" id="expense-title" placeholder="e.g. Lunch with colleagues, Metro fare, Petrol" required />
+            </div>
+
+            <!-- Payment Method Selection -->
+            <div class="form-group">
+              <label class="form-label">Payment Method / How was it paid?</label>
+              <div class="payment-method-grid" id="modal-payment-methods">
+                <label class="payment-radio-tile">
+                  <input type="radio" name="paymentMethod" value="UPI" checked />
+                  <div class="tile-inner tile-upi">
+                    <span class="tile-icon">⚡</span>
+                    <span class="tile-name">UPI</span>
+                    <span class="tile-sub">GPay / PhonePe / Paytm</span>
+                  </div>
+                </label>
+                <label class="payment-radio-tile">
+                  <input type="radio" name="paymentMethod" value="Cash" />
+                  <div class="tile-inner tile-cash">
+                    <span class="tile-icon">💵</span>
+                    <span class="tile-name">Cash</span>
+                    <span class="tile-sub">Paper currency</span>
+                  </div>
+                </label>
+                <label class="payment-radio-tile">
+                  <input type="radio" name="paymentMethod" value="Debit Card" />
+                  <div class="tile-inner tile-debit">
+                    <span class="tile-icon">💳</span>
+                    <span class="tile-name">Debit Card</span>
+                    <span class="tile-sub">Direct Bank</span>
+                  </div>
+                </label>
+                <label class="payment-radio-tile">
+                  <input type="radio" name="paymentMethod" value="Credit Card" />
+                  <div class="tile-inner tile-credit">
+                    <span class="tile-icon">💳</span>
+                    <span class="tile-name">Credit Card</span>
+                    <span class="tile-sub">Postpaid</span>
+                  </div>
+                </label>
+                <label class="payment-radio-tile">
+                  <input type="radio" name="paymentMethod" value="Net Banking" />
+                  <div class="tile-inner tile-netbanking">
+                    <span class="tile-icon">🏦</span>
+                    <span class="tile-name">Net Banking</span>
+                    <span class="tile-sub">NEFT / IMPS</span>
+                  </div>
+                </label>
+                <label class="payment-radio-tile">
+                  <input type="radio" name="paymentMethod" value="Other" />
+                  <div class="tile-inner tile-other">
+                    <span class="tile-icon">🔄</span>
+                    <span class="tile-name">Other</span>
+                    <span class="tile-sub">Wallet / Split</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Category & Date in 2 columns -->
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="expense-category">Category</label>
+                <select id="expense-category" class="form-select" required>
+                  <option value="Food & Dining">🍔 Food & Dining</option>
+                  <option value="Commute & Travel">🚕 Commute & Travel</option>
+                  <option value="Groceries">🛒 Groceries</option>
+                  <option value="Shopping">🛍️ Shopping</option>
+                  <option value="Bills & Utilities">💡 Bills & Utilities</option>
+                  <option value="Entertainment">🍿 Entertainment</option>
+                  <option value="Healthcare">💊 Healthcare</option>
+                  <option value="Education">📚 Education</option>
+                  <option value="Other">📦 Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="expense-date">Date</label>
+                <input type="date" id="expense-date" class="form-input" required />
+              </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="form-group">
+              <label class="form-label" for="expense-notes">Optional Note / Merchant</label>
+              <input type="text" id="expense-notes" placeholder="e.g. Starbucks, Swiggy, DMart" />
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn-outline" id="btn-cancel-expense">Cancel</button>
+              <button type="submit" class="btn-primary" id="btn-save-expense">Save Expense</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- MODAL: ADD / EDIT TASK -->
+      <div id="modal-task" class="bottom-sheet-modal">
+        <div class="modal-backdrop" id="backdrop-task"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="modal-task-title">Add Work / Task</h3>
+            <button class="btn-close-modal" id="btn-close-modal-task">&times;</button>
+          </div>
+          <form id="form-task" class="modal-body">
+            <input type="hidden" id="task-id" />
+
+            <div class="form-group">
+              <label class="form-label" for="task-title">What needs to be done?</label>
+              <input type="text" id="task-title" placeholder="e.g. Complete project report, Review pull request, Pay electricity bill" required autofocus />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="task-notes">Description / Notes (Optional)</label>
+              <textarea id="task-notes" rows="2" placeholder="Key details or checklist points..."></textarea>
+            </div>
+
+            <!-- Priority Selector -->
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <div class="priority-segmented-control">
+                <label class="priority-radio priority-high">
+                  <input type="radio" name="taskPriority" value="high" />
+                  <span class="priority-chip">🔥 High</span>
+                </label>
+                <label class="priority-radio priority-medium">
+                  <input type="radio" name="taskPriority" value="medium" checked />
+                  <span class="priority-chip">⚡ Medium</span>
+                </label>
+                <label class="priority-radio priority-low">
+                  <input type="radio" name="taskPriority" value="low" />
+                  <span class="priority-chip">🌿 Low</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Category & Due Date -->
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="task-category">Category</label>
+                <select id="task-category" class="form-select">
+                  <option value="Work">💼 Work</option>
+                  <option value="Study">📚 Study / Academic</option>
+                  <option value="Personal">🧘 Personal</option>
+                  <option value="Errands">🛒 Errands</option>
+                  <option value="Finance">💰 Financial</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="task-due-date">Due Date</label>
+                <input type="date" id="task-due-date" class="form-input" />
+              </div>
+            </div>
+
+            <!-- Recurring Daily Work / Habit Toggle -->
+            <div class="recurring-toggle-box">
+              <div class="toggle-info">
+                <span class="toggle-title">⚡ Recurring Daily Habit / Routine</span>
+                <span class="toggle-subtitle">Resets every morning so you can build daily streaks</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="task-is-recurring" />
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn-outline" id="btn-cancel-task">Cancel</button>
+              <button type="submit" class="btn-primary btn-purple" id="btn-save-task">Save Task</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Android Info Popup / Modal -->
+      <div id="modal-apk-info" class="bottom-sheet-modal">
+        <div class="modal-backdrop" id="backdrop-apk-info"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">🤖 Android Download & Install</h3>
+            <button class="btn-close-modal" id="btn-close-apk-info">&times;</button>
+          </div>
+          <div class="modal-body apk-info-body">
+            <div class="install-banner-pwa" id="pwa-install-banner">
+              <div class="pwa-icon-large">📱</div>
+              <div class="pwa-text-wrap">
+                <h4>Install TrackWise to Android</h4>
+                <p>Tap below to add TrackWise to your phone's Home Screen & App Drawer</p>
+                <button class="btn-primary" id="btn-pwa-install">📲 Install App Now</button>
+              </div>
+            </div>
+
+            <div class="apk-build-guide-compact">
+              <h4>Generate Standalone .APK File</h4>
+              <p>Your project is configured with <strong>Capacitor Android</strong>. To compile your debug APK file:</p>
+              <div class="code-box">
+                <code>cd c:\Academics\Tracking<br/>npm run cap:sync<br/>cd android &amp;&amp; gradlew assembleDebug</code>
+              </div>
+              <p class="guide-note">You can also run <code>npm run cap:open</code> to launch directly in Android Studio.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Application Scripts -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
